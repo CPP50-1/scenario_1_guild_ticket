@@ -1,0 +1,40 @@
+id,name,role,level,hp,status,guild_name
+2,Grom,Warrior,12,180,active,Ashfall Company
+3,Thane,Warrior,7,105,benched,Ashfall Company
+4,Jaina,Mage,15,120,active,Ashfall Company
+5,Finn,Mage,3,24,active,Ashfall Company
+7,Vex,Rogue,22,220,active,Ashfall Company
+8,Uther,Paladin,18,360,benched,Ashfall Company
+9,Seris,Paladin,1,20,active,Ashfall Company
+10,Recruit #1,Mage,2,11,active,Ashfall Company
+11,Recruit #2,Rogue,3,12,active,Ashfall Company
+12,Recruit #3,Paladin,4,13,benched,Ashfall Company
+14,Recruit #5,Mage,6,15,active,Ashfall Company
+15,Recruit #6,Rogue,7,16,active,Ashfall Company
+16,Recruit #7,Paladin,8,17,active,Ashfall Company
+17,Recruit #8,Warrior,9,18,benched,Ashfall Company
+19,Recruit #10,Rogue,11,20,active,Ashfall Company
+20,Recruit #11,Paladin,12,21,active,Ashfall Company
+21,Recruit #12,Warrior,13,22,active,Ashfall Company
+22,Recruit #13,Mage,14,23,benched,Ashfall Company
+24,Recruit #15,Paladin,16,25,active,Ashfall Company
+25,Recruit #16,Warrior,17,26,active,Ashfall Company
+26,Recruit #17,Mage,18,27,active,Ashfall Company
+27,Recruit #18,Rogue,19,28,benched,Ashfall Company
+29,Recruit #20,Warrior,21,30,active,Ashfall Company
+30,Recruit #21,Mage,22,31,active,Ashfall Company
+31,Recruit #22,Rogue,23,32,active,Ashfall Company
+32,Recruit #23,Paladin,24,33,benched,Ashfall Company
+34,Recruit #25,Mage,26,35,active,Ashfall Company
+35,Recruit #26,Rogue,27,36,active,Ashfall Company
+36,Recruit #27,Paladin,28,37,active,Ashfall Company
+37,Recruit #28,Warrior,29,38,benched,Ashfall Company
+39,Recruit #30,Rogue,1,40,active,Ashfall Company
+40,Recruit #31,Paladin,2,41,active,Ashfall Company
+41,Recruit #32,Warrior,3,42,active,Ashfall Company
+42,Recruit #33,Mage,4,43,benched,Ashfall Company
+44,Recruit #35,Paladin,6,45,active,Ashfall Company
+45,Recruit #36,Warrior,7,46,active,Ashfall Company
+46,Recruit #37,Mage,8,47,active,Ashfall Company
+47,Recruit #38,Rogue,9,48,benched,Ashfall Company
+49,Recruit #40,Warrior,11,50,active,Ashfall Company
