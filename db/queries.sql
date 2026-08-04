@@ -79,7 +79,7 @@ ORDER BY
 --3c. Get Only active characters
 SELECT name
 FROM character
-WHERE status == 'active';
+WHERE status IN ('active', 'benched');
 
 
 -- ============================================================================

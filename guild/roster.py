@@ -159,4 +159,4 @@ class Roster:
         return sorted(self._characters)
     
     def active_characters(self):
-        return [character for character in self._characters if character.status == 'active']
+        return [character for character in self._characters if character.status in ('active', 'benched')]

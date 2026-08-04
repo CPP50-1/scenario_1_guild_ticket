@@ -94,4 +94,4 @@ def test_roster_active_characters_only():
     retired = Warrior("Garrosh", level=25)
     retired.set_status("retired")
     roster = Roster([active,benched,retired])
-    assert len(roster.active_characters()) == 1
+    assert len(roster.active_characters()) == 2
