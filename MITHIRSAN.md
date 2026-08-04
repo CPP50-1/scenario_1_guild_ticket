@@ -7,3 +7,4 @@
 1. Status added to `Character.__init__` with default value;
 1. Query into `guild/Roaster.py` to retrive all *active* character from roster;
 1. New test into `tests/test_roatser`.
+1. added an export query in `db/export.py`, result in `exports/active_roster.csv`
