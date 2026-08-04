@@ -86,3 +86,12 @@ def test_roster_sorted_by_level_uses_character_lt():
     high = Mage("Jaina", level=9)
     roster = Roster([high, low])
     assert roster.sorted_by_level() == [low, high]
+
+def test_roster_active_characters_only():
+    active = Warrior("Grom", level=1)
+    benched = Mage("Jaina", level=9)
+    benched.set_status("benched")
+    retired = Warrior("Garrosh", level=25)
+    retired.set_status("retired")
+    roster = Roster([active,benched,retired])
+    assert len(roster.active_characters()) == 1
