@@ -157,3 +157,6 @@ class Roster:
     def sorted_by_level(self) -> List[Character]:
         # Relies on Character.__lt__ (Day 1) — no key= needed.
         return sorted(self._characters)
+    
+    def active_characters(self):
+        return [character for character in self._characters if character.status == 'active']
