@@ -2,9 +2,5 @@
 
 ## Solution
 
-1. Looked into `db/schemas.sql`, find out status already exist in characters;
-1. `Status` enum matching that schema, so `Character` can have an instance attribut realted to his status;
-1. Status added to `Character.__init__` with default value;
-1. Query into `guild/Roaster.py` to retrive all *active* character from roster;
-1. New test into `tests/test_roatser`.
-1. added an export query in `db/export.py`, result in `exports/active_roster.csv`
+The solution verified the existing *status* column in `db/schemas.sql`, implemented a matching `Status` enum as a `Character` instance attribute with a default value, added a query in `guild/Roster.py` to filter for active characters, created tests in `tests/test_roster.py`, and implemented an export in `db/export.py` that outputs to `exports/active_roster.csv`.
+The implmentation uses the status field in both Python and SQL, ensuring the code reflects the database schema.
