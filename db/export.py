@@ -156,7 +156,7 @@ def main():
             cur,
             """
             SELECT name FROM character
-            WHERE status = 'active'
+            WHERE status != 'retired'
             ORDER BY name
         """,
             None,

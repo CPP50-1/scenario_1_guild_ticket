@@ -153,6 +153,14 @@ class Roster:
         for character in self._characters:
             if bool(character):  # relies on Character.__bool__ (Day 1)
                 yield character
+    
+    def active_characters(self) -> Iterator[Character]:
+        """A generator-based query to filter out retired characters, 
+        matching the PO's definition of an 'active' roster.
+        """
+        for character in self._characters:
+            if character.status != "retired":
+                yield character
 
     def sorted_by_level(self) -> List[Character]:
         # Relies on Character.__lt__ (Day 1) — no key= needed.

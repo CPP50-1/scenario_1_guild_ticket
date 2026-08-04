@@ -81,7 +81,7 @@ ORDER BY
 
 SELECT name
 FROM character
-WHERE status = 'active'
+WHERE status != 'retired'
 ORDER BY name;
 
 -- ============================================================================
