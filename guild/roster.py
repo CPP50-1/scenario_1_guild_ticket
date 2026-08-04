@@ -13,7 +13,6 @@ from typing import Any, Dict, Iterator, List
 
 from .models import Character, Status
 
-
 # --- Dev A: OrderedSet ------------------------------------------------------
 
 
@@ -162,7 +161,7 @@ class Roster:
 
     def active_characters(self) -> Iterator[Character]:
         for character in self._characters:
-            if character.status == Status.ACTIVE:
+            if character.status != Status.RETIRED:
                 yield character
 
     def sorted_by_level(self) -> List[Character]:

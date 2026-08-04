@@ -202,8 +202,8 @@ def main():
         export_csv(
             cur,
             """
-            SELECT c.id, c.name, c.role, c.level, c.hp, g.name AS guild_name
-            FROM character c JOIN guild g ON g.id = c.guild_id WHERE c.status = 'active'
+            SELECT c.id, c.name, c.role, c.level, c.hp, c.status, g.name AS guild_name
+            FROM character c JOIN guild g ON g.id = c.guild_id WHERE c.status IN ('active','benched')
             ORDER BY c.id;
             """,
             None,

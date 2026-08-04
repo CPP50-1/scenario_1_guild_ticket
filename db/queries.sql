@@ -124,8 +124,9 @@ SELECT
     c.role,
     c.level,
     c.hp,
+    c.status,
     g.name AS guild_name
-FROM character c 
+FROM character c
 JOIN guild g ON g.id = c.guild_id
-WHERE c.status = 'active'
+WHERE c.status IN ('active','benched')
 ORDER BY c.id;
