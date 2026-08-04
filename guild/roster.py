@@ -12,6 +12,29 @@ from typing import Any, Dict, Iterator, List
 
 from .models import Character
 
+import psycopg2
+import psycopg2.extras
+
+
+def _load_dotenv(start: Path) -> None:
+    """Minimal, dependency-free .env loader — see seed.py for details."""
+    for candidate in (start / ".env", start.parent / ".env"):
+        if not candidate.is_file():
+            continue
+        for line in candidate.read_text(encoding="utf-8").splitlines():
+            line = line.strip()
+            if not line or line.startswith("#") or "=" not in line:
+                continue
+            key, _, value = line.partition("=")
+            key, value = key.strip(), value.strip().strip('"').strip("'")
+            os.environ.setdefault(key, value)
+        return
+
+
+_load_dotenv(Path(__file__).resolve().parent)
+
+DSN = os.environ.get("GUILDOPS_DSN")
+
 
 # --- Dev A: OrderedSet ------------------------------------------------------
 
@@ -157,3 +180,30 @@ class Roster:
     def sorted_by_level(self) -> List[Character]:
         # Relies on Character.__lt__ (Day 1) — no key= needed.
         return sorted(self._characters)
+
+    def get_active_characters(self, guild_name) -> List[Character]:
+        try:
+            conn = psycopg2.connect(DB_DSN, options="-c lc_messages=C")
+        except Exception as exc:
+            raise SystemExit(f"\nCould not connect to Postgres: {exc}\n")
+
+        with conn.cursor() as cur:
+            query = '''
+                SELECT C.NAME AS CHARACTER_NAME
+                  FROM PUBLIC.CHARACTER C
+                  JOIN PUBLIC.GUILD G
+                    ON C.GUILD_ID = G.ID
+                 WHERE C.STATUS = %s
+                   AND G.NAME = %s
+            '''
+            values = ("active",guild_name)
+            cur.execute(query, values or ())
+            rows = [row for row in cur.fetchall()]
+            active_characters = []
+            for chr in self._characters:
+                if chr.name in rows:
+                    active_characters.append(chr)
+        conn.close()
+        return active_characters
+
+
