@@ -23,3 +23,12 @@ To implement it, `Character` now has a `status` field with a new
 ## Verification
 
 All 48 existing tests pass + 1 new test for the active filter.
+
+## Correction
+
+I had not asked the Product Owner what "active" meant before implementing.
+It was clarified that "active" in the ticket actually means the
+`active` AND `benched` members.
+
+I also missed the CSV export of the active members at first; a new
+`list_active.csv` export was added in `db/export.py`.

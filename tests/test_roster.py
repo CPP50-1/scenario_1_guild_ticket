@@ -88,7 +88,7 @@ def test_roster_active_characters_generator():
     retired = Rogue("Screed", level=20)
     retired.status = 'retired'
     roster = Roster([active, benched, retired])
-    assert list(roster.active_characters()) == [active]
+    assert list(roster.active_characters()) == [active, benched]
 
 
 def test_roster_sorted_by_level_uses_character_lt():

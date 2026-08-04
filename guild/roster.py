@@ -161,7 +161,7 @@ class Roster:
             Iterator[Character]: The list of active characters
         """
         for character in self._characters:
-            if character.status == "active":
+            if character.status == "active" or character.status == 'benched':
                 yield character
 
     def sorted_by_level(self) -> List[Character]:

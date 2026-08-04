@@ -126,6 +126,13 @@ def main():
             ORDER BY CASE status WHEN 'active' THEN 1 WHEN 'benched' THEN 2 WHEN 'retired' THEN 3 END, name
         """, None, "list_status.csv")
 
+        print("3.1 Status / active character")
+        export_csv(cur, """
+            SELECT name, status FROM character
+            WHERE status = 'active' OR status = 'benched'
+            ORDER BY name
+        """, None, 'list_active.csv')
+
         export_csv(cur, """
             SELECT title, tier FROM achievement
             ORDER BY CASE tier WHEN 'gold' THEN 1 WHEN 'silver' THEN 2 WHEN 'bronze' THEN 3 END, title
