@@ -79,7 +79,7 @@ ORDER BY
 -- 3c. Sorting only for active members.
 SELECT name
 FROM character
-WHERE status == 'active';
+WHERE status = 'active';
 
 
 -- ============================================================================
