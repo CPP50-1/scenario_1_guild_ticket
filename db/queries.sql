@@ -2,9 +2,10 @@
 -- Four series, each one feeding a specific part of the HTML/CSS block.
 
 -- ============================================================================
--- 1. Full roster — JOIN across the 1-N relation (guild -> character)
---    Feeds: semantic refactor of the roster table (+ Flexbox/Grid)
+-- 1. Roster characters
 -- ============================================================================
+-- 1a. Full roster — JOIN across the 1-N relation (guild -> character)
+--     Feeds: semantic refactor of the roster table (+ Flexbox/Grid)
 SELECT
     c.id,
     c.name,
@@ -17,6 +18,20 @@ FROM character c
 JOIN guild g ON g.id = c.guild_id
 ORDER BY c.id;
 
+-- 1b. Roster's active characters — JOIN across the 1-N relation (guild -> active character)
+--     Feeds: todo  To be determined
+SELECT
+    c.id,
+    c.name,
+    c.role,
+    c.level,
+    c.hp,
+    c.status,
+    g.name AS guild_name
+FROM character c
+JOIN guild g ON g.id = c.guild_id
+WHERE c.status IN ('active', 'benched')
+ORDER BY c.id;
 
 -- ============================================================================
 -- 2. KPI-style aggregates — one query per KPI
