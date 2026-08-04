@@ -77,6 +77,13 @@ ORDER BY
     title;
 
 
+-- select only active characters
+
+SELECT name
+FROM character
+WHERE status = 'active'
+ORDER BY name;
+
 -- ============================================================================
 -- 4. Schema introspection — 3 queries, against the `character` table
 --    Feeds: Bootstrap form where every field mirrors a real constraint
