@@ -6,6 +6,10 @@ from __future__ import annotations
 
 from typing import Dict, Type
 
+import _stat
+
+import _statistics
+
 from .fields import IntField, StringField
 
 
@@ -55,6 +59,7 @@ class Character(metaclass=GuildMeta):
     name = StringField(max_length=50)
     hp = IntField(minimum=0)
     level = IntField(minimum=1, maximum=100)
+    status = StringField(max_length=50)
 
     base_hp: int = 10  # overridden by every concrete subclass; enforced by GuildMeta
 
@@ -62,6 +67,7 @@ class Character(metaclass=GuildMeta):
         self.name = name
         self.level = level
         self.hp = self.base_hp * level
+        self.status = 'active'
 
     def describe_role(self) -> str:
         return "Adventurer"
@@ -92,6 +98,11 @@ class Character(metaclass=GuildMeta):
         # A character is "truthy" while alive.
         return self.hp > 0
 
+    def get_status(self):
+        return self.status
+    
+    def set_status(self, new_status):
+        self.status = new_status
 
 class Warrior(Character):
     base_hp = 15
