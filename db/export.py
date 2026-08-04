@@ -98,6 +98,14 @@ def main():
             ORDER BY c.id
         """, None, "roster.csv")
 
+        export_csv(cur, """
+            SELECT c.id, c.name, c.role, c.level, c.hp, c.status, g.name AS guild_name
+            FROM character c
+            JOIN guild g ON g.id = c.guild_id
+            WHERE c.status = 'active'
+            ORDER BY c.id
+            """, None, "roster_active.csv")
+
         print("2. KPIs")
         export_csv(cur, """
             SELECT g.name AS guild_name,
