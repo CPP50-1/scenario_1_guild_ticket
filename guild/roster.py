@@ -14,6 +14,8 @@ from .models import Character
 
 import psycopg2
 import psycopg2.extras
+import os
+from pathlib import Path
 
 
 def _load_dotenv(start: Path) -> None:
