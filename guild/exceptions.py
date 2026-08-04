@@ -62,6 +62,18 @@ class RangeError(ValidationError):
         super().__init__(f"'{field_name}' must be {bound_text}, got {value!r}")
 
 
+class InvalidChoiceError(ValidationError):
+    """Raised when a value is not one of a field's allowed choices."""
+
+    def __init__(self, field_name: str, value: object, choices):
+        self.field_name = field_name
+        self.value = value
+        self.choices = choices
+        super().__init__(
+            f"'{field_name}' must be one of {choices}, got {value!r}"
+        )
+
+
 class ValidationErrorGroup(GuildError):
     """Raised by batch_validation() once the block exits, if any errors were
     collected. Holds every individual error rather than just the first one.

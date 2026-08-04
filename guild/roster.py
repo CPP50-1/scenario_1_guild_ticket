@@ -154,6 +154,16 @@ class Roster:
             if bool(character):  # relies on Character.__bool__ (Day 1)
                 yield character
 
+    def active_characters(self) -> Iterator[Character]:
+        """generator-based query to get all character in the roster with the status set to "active"
+
+        Yields:
+            Iterator[Character]: The list of active characters
+        """
+        for character in self._characters:
+            if character.status == "active":
+                yield character
+
     def sorted_by_level(self) -> List[Character]:
         # Relies on Character.__lt__ (Day 1) — no key= needed.
         return sorted(self._characters)

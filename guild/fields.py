@@ -11,7 +11,7 @@ from __future__ import annotations
 
 from typing import Any, Optional, Type
 
-from .exceptions import RangeError, RequiredFieldError, TypeMismatchError
+from .exceptions import InvalidChoiceError, RangeError, RequiredFieldError, TypeMismatchError
 
 
 class Field:
@@ -98,6 +98,19 @@ class StringField(Validated):
             raise RangeError(self.name, value, maximum=self.max_length)
         if value is not None and value.strip() == "" and self.required:
             raise RequiredFieldError(self.name)
+
+
+class ChoiceField(StringField):
+    """A StringField restricted to a fixed set of allowed values."""
+
+    def __init__(self, choices, required=True, max_length=None):
+        super().__init__(required=required, max_length=max_length)
+        self.choices = tuple(choices)
+
+    def validate(self, value):
+        super().validate(value)
+        if value is not None and value not in self.choices:
+            raise InvalidChoiceError(self.name, value, self.choices)
 
 
 class IntField(Validated):

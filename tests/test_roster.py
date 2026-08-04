@@ -81,6 +81,16 @@ def test_roster_alive_characters_generator():
     assert list(roster.alive_characters()) == [alive]
 
 
+def test_roster_active_characters_generator():
+    active = Warrior("Grom", level=1)
+    benched = Mage("Jaina", level=1)
+    benched.status = 'benched'
+    retired = Rogue("Screed", level=20)
+    retired.status = 'retired'
+    roster = Roster([active, benched, retired])
+    assert list(roster.active_characters()) == [active]
+
+
 def test_roster_sorted_by_level_uses_character_lt():
     low = Warrior("Grom", level=1)
     high = Mage("Jaina", level=9)

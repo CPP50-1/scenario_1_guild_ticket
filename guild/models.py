@@ -6,7 +6,7 @@ from __future__ import annotations
 
 from typing import Dict, Type
 
-from .fields import IntField, StringField
+from .fields import ChoiceField, IntField, StringField
 
 
 class GuildMeta(type):
@@ -55,6 +55,7 @@ class Character(metaclass=GuildMeta):
     name = StringField(max_length=50)
     hp = IntField(minimum=0)
     level = IntField(minimum=1, maximum=100)
+    status = ChoiceField(choices=("active", "benched", "retired"))
 
     base_hp: int = 10  # overridden by every concrete subclass; enforced by GuildMeta
 
@@ -62,6 +63,7 @@ class Character(metaclass=GuildMeta):
         self.name = name
         self.level = level
         self.hp = self.base_hp * level
+        self.status = "active"
 
     def describe_role(self) -> str:
         return "Adventurer"
