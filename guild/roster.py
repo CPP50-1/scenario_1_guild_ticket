@@ -1,19 +1,21 @@
 """Day 2 workshop targets, one per developer:
 
-    Dev A -> OrderedSet      (custom unique-item structure)
-    Dev B -> StatCalculator  (memoized callable, state held between calls)
-    Dev C -> Roster          (full container protocol + iterator protocol
-                              from scratch, i.e. __iter__ returning a real
-                              iterator object with __next__, not a generator)
+Dev A -> OrderedSet      (custom unique-item structure)
+Dev B -> StatCalculator  (memoized callable, state held between calls)
+Dev C -> Roster          (full container protocol + iterator protocol
+                          from scratch, i.e. __iter__ returning a real
+                          iterator object with __next__, not a generator)
 """
+
 from __future__ import annotations
 
 from typing import Any, Dict, Iterator, List
 
-from .models import Character
+from .models import Character, Status
 
 
 # --- Dev A: OrderedSet ------------------------------------------------------
+
 
 class OrderedSet:
     """A set that remembers insertion order — used here for unique quest
@@ -54,6 +56,7 @@ class OrderedSet:
 
 # --- Dev B: memoized callable ------------------------------------------------
 
+
 class StatCalculator:
     """A callable object that caches results by argument, for an
     expensive/derived stat computation. Demonstrates __call__ plus state
@@ -82,6 +85,7 @@ class StatCalculator:
 
 
 # --- Dev C: full container protocol + iterator protocol from scratch -------
+
 
 class RosterIterator:
     """A standalone iterator object for Roster, built from scratch rather
@@ -121,7 +125,9 @@ class Roster:
 
     def __setitem__(self, index: int, value: Character) -> None:
         if not isinstance(value, Character):
-            raise TypeError(f"Roster only holds Character instances, got {type(value).__name__}")
+            raise TypeError(
+                f"Roster only holds Character instances, got {type(value).__name__}"
+            )
         self._characters[index] = value
 
     def __delitem__(self, index: int) -> None:
@@ -152,6 +158,11 @@ class Roster:
         """
         for character in self._characters:
             if bool(character):  # relies on Character.__bool__ (Day 1)
+                yield character
+
+    def active_characters(self) -> Iterator[Character]:
+        for character in self._characters:
+            if character.status == Status.ACTIVE:
                 yield character
 
     def sorted_by_level(self) -> List[Character]:

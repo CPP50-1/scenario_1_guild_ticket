@@ -1,9 +1,10 @@
 from guild.items import Item, Rarity
-from guild.models import Mage, Rogue, Warrior
+from guild.models import Mage, Rogue, Warrior, Status
 from guild.roster import OrderedSet, Roster, RosterIterator, StatCalculator
 
 
 # --- OrderedSet -------------------------------------------------------------
+
 
 def test_ordered_set_preserves_insertion_order():
     items = [Item("Sword", Rarity.COMMON, 1), Item("Shield", Rarity.COMMON, 2)]
@@ -23,6 +24,7 @@ def test_ordered_set_membership_and_discard():
 
 
 # --- StatCalculator (memoized callable) -------------------------------------
+
 
 def test_stat_calculator_is_callable_and_caches():
     calc = StatCalculator()
@@ -48,6 +50,7 @@ def test_stat_calculator_distinguishes_different_keys():
 
 
 # --- Roster: container protocol + from-scratch iterator --------------------
+
 
 def test_roster_container_protocol():
     w, m = Warrior("Grom", level=1), Mage("Jaina", level=1)
@@ -79,6 +82,14 @@ def test_roster_alive_characters_generator():
     dead.hp = 0
     roster = Roster([alive, dead])
     assert list(roster.alive_characters()) == [alive]
+
+
+def test_roster_active_characters_generator():
+    active = Warrior("Grom", level=1, status=Status.ACTIVE)
+    benched = Rogue("Valeera", level=1, status=Status.BENCHED)
+    retired = Mage("Jaina", level=1, status=Status.RETIRED)
+    roster = Roster([active, benched, retired])
+    assert list(roster.active_characters()) == [active]
 
 
 def test_roster_sorted_by_level_uses_character_lt():

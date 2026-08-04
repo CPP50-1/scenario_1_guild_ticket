@@ -112,3 +112,20 @@ SELECT
 FROM pg_constraint
 WHERE conrelid = 'character'::regclass
   AND contype = 'c';
+
+-- ============================================================================
+-- Scenarios
+-- ============================================================================
+
+-- Scenario 1: active members
+SELECT
+    c.id,
+    c.name,
+    c.role,
+    c.level,
+    c.hp,
+    g.name AS guild_name
+FROM character c 
+JOIN guild g ON g.id = c.guild_id
+WHERE c.status = 'active'
+ORDER BY c.id;

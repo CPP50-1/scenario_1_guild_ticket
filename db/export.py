@@ -8,6 +8,7 @@ needed, and no need to set an environment variable by hand each session.
 GUILDOPS_DSN must be set one way or the other; there's no hardcoded
 fallback.
 """
+
 from __future__ import annotations
 
 import csv
@@ -92,65 +93,122 @@ def main():
 
     with conn.cursor() as cur:
         print("1. Roster JOIN")
-        export_csv(cur, """
+        export_csv(
+            cur,
+            """
             SELECT c.id, c.name, c.role, c.level, c.hp, c.status, g.name AS guild_name
             FROM character c JOIN guild g ON g.id = c.guild_id
             ORDER BY c.id
-        """, None, "roster.csv")
+        """,
+            None,
+            "roster.csv",
+        )
 
         print("2. KPIs")
-        export_csv(cur, """
+        export_csv(
+            cur,
+            """
             SELECT g.name AS guild_name,
                    count(c.id) FILTER (WHERE c.status = 'active') AS active_count
             FROM guild g LEFT JOIN character c ON c.guild_id = g.id
             GROUP BY g.name ORDER BY g.name
-        """, None, "kpi_active_count.csv")
+        """,
+            None,
+            "kpi_active_count.csv",
+        )
 
-        export_csv(cur, """
+        export_csv(
+            cur,
+            """
             SELECT c.name
             FROM character c
             LEFT JOIN character_achievement ca ON ca.character_id = c.id
             WHERE ca.character_id IS NULL
             ORDER BY c.name
-        """, None, "kpi_zero_achievements.csv")
+        """,
+            None,
+            "kpi_zero_achievements.csv",
+        )
 
-        export_csv(cur, """
+        export_csv(
+            cur,
+            """
             SELECT c.name, c.hp, c.level
             FROM character c WHERE c.hp < 30
             ORDER BY c.hp ASC
-        """, None, "kpi_low_hp.csv")
+        """,
+            None,
+            "kpi_low_hp.csv",
+        )
 
         print("3. Status / tier lists")
-        export_csv(cur, """
+        export_csv(
+            cur,
+            """
             SELECT name, status FROM character
             ORDER BY CASE status WHEN 'active' THEN 1 WHEN 'benched' THEN 2 WHEN 'retired' THEN 3 END, name
-        """, None, "list_status.csv")
+        """,
+            None,
+            "list_status.csv",
+        )
 
-        export_csv(cur, """
+        export_csv(
+            cur,
+            """
             SELECT title, tier FROM achievement
             ORDER BY CASE tier WHEN 'gold' THEN 1 WHEN 'silver' THEN 2 WHEN 'bronze' THEN 3 END, title
-        """, None, "list_tier.csv")
+        """,
+            None,
+            "list_tier.csv",
+        )
 
         print("4. Schema introspection")
-        export_json(cur, """
+        export_json(
+            cur,
+            """
             SELECT column_name, data_type, is_nullable, column_default
             FROM information_schema.columns WHERE table_name = 'character'
             ORDER BY ordinal_position
-        """, None, "schema_columns.json")
+        """,
+            None,
+            "schema_columns.json",
+        )
 
-        export_json(cur, """
+        export_json(
+            cur,
+            """
             SELECT tc.constraint_name, tc.constraint_type, ccu.column_name
             FROM information_schema.table_constraints tc
             JOIN information_schema.constraint_column_usage ccu
                 ON ccu.constraint_name = tc.constraint_name
             WHERE tc.table_name = 'character'
             ORDER BY tc.constraint_type, ccu.column_name
-        """, None, "schema_constraints.json")
+        """,
+            None,
+            "schema_constraints.json",
+        )
 
-        export_json(cur, """
+        export_json(
+            cur,
+            """
             SELECT conname, pg_get_constraintdef(oid) AS definition
             FROM pg_constraint WHERE conrelid = 'character'::regclass AND contype = 'c'
-        """, None, "schema_checks.json")
+        """,
+            None,
+            "schema_checks.json",
+        )
+
+        print("ACTIVE MEMBER")
+        export_csv(
+            cur,
+            """
+            SELECT c.id, c.name, c.role, c.level, c.hp, g.name AS guild_name
+            FROM character c JOIN guild g ON g.id = c.guild_id WHERE c.status = 'active'
+            ORDER BY c.id;
+            """,
+            None,
+            "active_roster.csv",
+        )
 
     conn.close()
     print("\nAll exports written to", OUT)

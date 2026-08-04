@@ -1,0 +1,30 @@
+id,name,role,level,hp,guild_name
+2,Grom,Warrior,12,180,Ashfall Company
+4,Jaina,Mage,15,120,Ashfall Company
+5,Finn,Mage,3,24,Ashfall Company
+7,Vex,Rogue,22,220,Ashfall Company
+9,Seris,Paladin,1,20,Ashfall Company
+10,Recruit #1,Mage,2,11,Ashfall Company
+11,Recruit #2,Rogue,3,12,Ashfall Company
+14,Recruit #5,Mage,6,15,Ashfall Company
+15,Recruit #6,Rogue,7,16,Ashfall Company
+16,Recruit #7,Paladin,8,17,Ashfall Company
+19,Recruit #10,Rogue,11,20,Ashfall Company
+20,Recruit #11,Paladin,12,21,Ashfall Company
+21,Recruit #12,Warrior,13,22,Ashfall Company
+24,Recruit #15,Paladin,16,25,Ashfall Company
+25,Recruit #16,Warrior,17,26,Ashfall Company
+26,Recruit #17,Mage,18,27,Ashfall Company
+29,Recruit #20,Warrior,21,30,Ashfall Company
+30,Recruit #21,Mage,22,31,Ashfall Company
+31,Recruit #22,Rogue,23,32,Ashfall Company
+34,Recruit #25,Mage,26,35,Ashfall Company
+35,Recruit #26,Rogue,27,36,Ashfall Company
+36,Recruit #27,Paladin,28,37,Ashfall Company
+39,Recruit #30,Rogue,1,40,Ashfall Company
+40,Recruit #31,Paladin,2,41,Ashfall Company
+41,Recruit #32,Warrior,3,42,Ashfall Company
+44,Recruit #35,Paladin,6,45,Ashfall Company
+45,Recruit #36,Warrior,7,46,Ashfall Company
+46,Recruit #37,Mage,8,47,Ashfall Company
+49,Recruit #40,Warrior,11,50,Ashfall Company

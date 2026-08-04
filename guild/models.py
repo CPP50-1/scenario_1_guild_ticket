@@ -2,9 +2,11 @@
 set (Day 1), and a deliberate mixin/MRO conflict resolved via cooperative
 super() (Day 4).
 """
+
 from __future__ import annotations
 
 from typing import Dict, Type
+from enum import Enum
 
 from .fields import IntField, StringField
 
@@ -43,6 +45,12 @@ class GuildMeta(type):
         return cls
 
 
+class Status(Enum):
+    ACTIVE = 1
+    BENCHED = 2
+    RETIRED = 3
+
+
 class Character(metaclass=GuildMeta):
     """Base class for every playable character.
 
@@ -58,10 +66,11 @@ class Character(metaclass=GuildMeta):
 
     base_hp: int = 10  # overridden by every concrete subclass; enforced by GuildMeta
 
-    def __init__(self, name: str, level: int = 1):
+    def __init__(self, name: str, level: int = 1, status: Status = Status.ACTIVE):
         self.name = name
         self.level = level
         self.hp = self.base_hp * level
+        self.status = status
 
     def describe_role(self) -> str:
         return "Adventurer"
@@ -77,7 +86,11 @@ class Character(metaclass=GuildMeta):
     def __eq__(self, other: object) -> bool:
         if not isinstance(other, Character):
             return NotImplemented
-        return (type(self), self.name, self.level) == (type(other), other.name, other.level)
+        return (type(self), self.name, self.level) == (
+            type(other),
+            other.name,
+            other.level,
+        )
 
     def __hash__(self) -> int:
         return hash((type(self), self.name, self.level))
@@ -115,6 +128,7 @@ class Rogue(Character):
 
 
 # --- Day 4 mixins: horizontal reuse without deep inheritance ---------------
+
 
 class HealerMixin:
     """Adds healing behavior. Deliberately participates in the
@@ -178,6 +192,7 @@ class Paladin(HealerMixin, TankMixin, Warrior):
 
 
 # --- Day 4 (Dev B): an independent mixin, not part of the conflict above ---
+
 
 class LoggableMixin:
     """Logs every attribute assignment on the instance. Independent of the
