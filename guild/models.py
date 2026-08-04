@@ -58,10 +58,11 @@ class Character(metaclass=GuildMeta):
 
     base_hp: int = 10  # overridden by every concrete subclass; enforced by GuildMeta
 
-    def __init__(self, name: str, level: int = 1):
+    def __init__(self, name: str, level: int = 1, status = 'active'):
         self.name = name
         self.level = level
         self.hp = self.base_hp * level
+        self.status = status
 
     def describe_role(self) -> str:
         return "Adventurer"

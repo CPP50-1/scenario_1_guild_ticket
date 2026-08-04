@@ -157,3 +157,8 @@ class Roster:
     def sorted_by_level(self) -> List[Character]:
         # Relies on Character.__lt__ (Day 1) — no key= needed.
         return sorted(self._characters)
+
+    # ================ Guild ticket assignment: filter for active members ================
+
+    def get_active_members(self) -> List[Character]:
+        return [character for character in self._characters if character.status == 'active']
