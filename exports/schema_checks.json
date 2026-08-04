@@ -1,0 +1,18 @@
+[
+  {
+    "conname": "character_role_check",
+    "definition": "CHECK (((role)::text = ANY ((ARRAY['Warrior'::character varying, 'Mage'::character varying, 'Rogue'::character varying, 'Paladin'::character varying])::text[])))"
+  },
+  {
+    "conname": "character_level_check",
+    "definition": "CHECK (((level >= 1) AND (level <= 100)))"
+  },
+  {
+    "conname": "character_hp_check",
+    "definition": "CHECK ((hp >= 0))"
+  },
+  {
+    "conname": "character_status_check",
+    "definition": "CHECK (((status)::text = ANY ((ARRAY['active'::character varying, 'benched'::character varying, 'retired'::character varying])::text[])))"
+  }
+]
