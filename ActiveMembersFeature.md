@@ -11,6 +11,6 @@
 
 * Added test for new list of only active characters
 
-# TODO
+# Queries
 
-* Create a query to have only active characters
+* Added query to get only active characters

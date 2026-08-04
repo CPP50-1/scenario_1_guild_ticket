@@ -76,6 +76,11 @@ ORDER BY
     END,
     title;
 
+--3c. Get Only active characters
+SELECT name
+FROM character
+WHERE status == 'active';
+
 
 -- ============================================================================
 -- 4. Schema introspection — 3 queries, against the `character` table
