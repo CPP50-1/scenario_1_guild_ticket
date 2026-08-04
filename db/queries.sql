@@ -15,6 +15,7 @@ SELECT
     g.name AS guild_name
 FROM character c
 JOIN guild g ON g.id = c.guild_id
+WHERE (:status IS NULL OR c.status = :status)
 ORDER BY c.id;
 
 
