@@ -1,8 +1,23 @@
 [
   {
+    "constraint_name": "character_guild_id_not_null",
+    "constraint_type": "CHECK",
+    "column_name": "guild_id"
+  },
+  {
     "constraint_name": "character_hp_check",
     "constraint_type": "CHECK",
     "column_name": "hp"
+  },
+  {
+    "constraint_name": "character_hp_not_null",
+    "constraint_type": "CHECK",
+    "column_name": "hp"
+  },
+  {
+    "constraint_name": "character_id_not_null",
+    "constraint_type": "CHECK",
+    "column_name": "id"
   },
   {
     "constraint_name": "character_level_check",
@@ -10,12 +25,32 @@
     "column_name": "level"
   },
   {
+    "constraint_name": "character_level_not_null",
+    "constraint_type": "CHECK",
+    "column_name": "level"
+  },
+  {
+    "constraint_name": "character_name_not_null",
+    "constraint_type": "CHECK",
+    "column_name": "name"
+  },
+  {
     "constraint_name": "character_role_check",
     "constraint_type": "CHECK",
     "column_name": "role"
   },
   {
+    "constraint_name": "character_role_not_null",
+    "constraint_type": "CHECK",
+    "column_name": "role"
+  },
+  {
     "constraint_name": "character_status_check",
+    "constraint_type": "CHECK",
+    "column_name": "status"
+  },
+  {
+    "constraint_name": "character_status_not_null",
     "constraint_type": "CHECK",
     "column_name": "status"
   },
