@@ -203,7 +203,7 @@ def main():
             cur,
             """
             SELECT c.id, c.name, c.role, c.level, c.hp, c.status, g.name AS guild_name
-            FROM character c JOIN guild g ON g.id = c.guild_id WHERE c.status IN ('active','benched')
+            FROM character c JOIN guild g ON g.id = c.guild_id WHERE c.status != 'retired'
             ORDER BY c.id;
             """,
             None,
