@@ -87,6 +87,7 @@
             td {
                 border-bottom: 1px solid var(--surface-3);
                 padding: var(--size-3) var(--size-4);
+                max-inline-size:none;
             }
 
             th {
@@ -108,8 +109,14 @@
     </style>
 
     <script type="module">
-        const hiddenColumns = []
-        // const hiddenColumns = ["id", "role", "level", "hp"];
+        // const hiddenColumns = []
+        const hiddenColumns = [
+            "id",
+            "role",
+            "level",
+            "hp",
+            "status",
+        ];
 
         const headerAliases = {
             "id": "ID",
