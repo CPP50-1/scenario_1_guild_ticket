@@ -99,7 +99,7 @@
 
     <script type="module">
         // const hiddenColumns = []
-        const hiddenColumns = ["id","role","level","hp"];
+        const hiddenColumns = ["id", "role", "level", "hp"];
 
         const headerAliases = {
             "id": "ID",
@@ -120,37 +120,58 @@
 
             for (let i = 0; i < text.length; i++) {
                 const char = text[i];
-                if (char === '"') {
-                    if (inQuotes && text[i + 1] === '"') {
-                        currentValue += '"'; i++;
-                    } else {
-                        inQuotes = !inQuotes;
-                    }
+
+                // 1. Handle escaped quotes ("") inside quotes
+                if (char === '"' && inQuotes && text[i + 1] === '"') {
+                    currentValue += '"';
+                    i++;
                     continue;
                 }
+
+                // 2. Handle opening or closing quotes
+                if (char === '"') {
+                    inQuotes = !inQuotes;
+                    continue;
+                }
+
+                // 3. Any other character inside quotes is part of the value
                 if (inQuotes) {
-                    currentValue += char; continue;
+                    currentValue += char;
+                    continue;
                 }
-                switch (char) {
-                    case ',':
-                        currentRow.push(currentValue); currentValue = ""; break;
-                    case '\r':
-                        if (text[i + 1] === '\n') i++;
-                    case '\n':
-                        currentRow.push(currentValue); rows.push(currentRow);
-                        currentRow = []; currentValue = ""; break;
-                    default:
-                        currentValue += char;
+
+                // 4. Handle column separator
+                if (char === ',') {
+                    currentRow.push(currentValue);
+                    currentValue = "";
+                    continue;
                 }
+
+                // 5. Handle row separators (\r, \n, or \r\n)
+                if (char === '\r' || char === '\n') {
+                    if (char === '\r' && text[i + 1] === '\n') i++; // Skip the \n in \r\n sequences
+
+                    currentRow.push(currentValue);
+                    rows.push(currentRow);
+                    currentRow = [];
+                    currentValue = "";
+                    continue;
+                }
+
+                // 6. Normal characters outside of quotes
+                currentValue += char;
             }
             if (currentValue || currentRow.length > 0) {
-                currentRow.push(currentValue); rows.push(currentRow);
+                currentRow.push(currentValue);
+                rows.push(currentRow);
             }
             return rows.filter(row => row.some(cell => cell.trim() !== ''));
         }
 
         // 2. RENDERING: Populate the semantic table dynamically
-        async function populateTable(table) {
+        async function populateTable() {
+            const table = document.querySelector('table[data-csv-src]');
+            if (!table) return;
             const src = table.dataset.csvSrc;
             if (!src) return;
 
@@ -218,7 +239,7 @@
         }
 
         // 3. ORCHESTRATION
-        document.querySelectorAll('table[data-csv-src]').forEach(populateTable);
+        populateTable();
     </script>
 </head>
 
