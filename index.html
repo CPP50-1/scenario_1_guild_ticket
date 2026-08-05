@@ -1,12 +1,91 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Roster</title>
     
-    <!-- 1. Import Pico CSS from CDN -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
+    <!-- 1. Import Open Props and its excellent Normalize script -->
+    <link rel="stylesheet" href="https://unpkg.com/open-props"/>
+    <link rel="stylesheet" href="https://unpkg.com/open-props/normalize.min.css"/>
+
+    <style>
+        /* 
+         * 2. STYLING WITH TOKENS
+         * We write standard CSS, but inject Open Props variables for perfect 
+         * colors, spacing, typography, and shadows.
+         */
+        body {
+            /* normalize.min.css already gives us a great system font and handles light/dark mode */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: var(--size-5) var(--size-3);
+            background-color: var(--surface-2); /* Soft background */
+        }
+
+        header {
+            margin-bottom: var(--size-5);
+            text-align: center;
+        }
+
+        h1 {
+            /* Open Props fluid typography scales perfectly on all devices */
+            font-size: var(--font-size-fluid-2);
+            font-weight: var(--font-weight-8);
+            letter-spacing: var(--font-letterspacing-2);
+            color: var(--text-1);
+        }
+
+        .table-container {
+            width: 100%;
+            max-width: var(--size-content-3); /* Perfect reading width */
+            background-color: var(--surface-1);
+            border-radius: var(--radius-3);
+            box-shadow: var(--shadow-4); /* Gorgeous, perfectly calculated shadow */
+            border: 1px solid var(--surface-3);
+            overflow-x: auto; /* Safe horizontal scrolling for mobile */
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        th, td {
+            /* Using standard size tokens for consistent padding */
+            padding: var(--size-3) var(--size-4);
+            border-bottom: 1px solid var(--surface-3);
+        }
+
+        th {
+            background-color: var(--surface-1);
+            font-weight: var(--font-weight-6);
+            color: var(--text-2);
+            position: sticky; /* Sticky headers out of the box */
+            top: 0;
+            /* Subtle bottom border for headers */
+            box-shadow: 0 1px 0 var(--surface-4); 
+        }
+
+        /* Hover effect on rows using standard CSS pseudo-selectors */
+        tbody tr:hover td {
+            background-color: var(--surface-2);
+            transition: background-color 0.2s ease;
+        }
+
+        /* Elegant loading state without needing HTML changes */
+        table:empty::after {
+            content: "Loading roster data...";
+            display: block;
+            padding: var(--size-6);
+            text-align: center;
+            color: var(--text-3);
+            font-style: italic;
+            animation: var(--animation-pulse); /* Built-in Open Props animation */
+        }
+    </style>
 
     <script type="module">
         // 1. PARSING: Robust state-machine CSV parser
@@ -20,37 +99,29 @@
                 const char = text[i];
                 if (char === '"') {
                     if (inQuotes && text[i + 1] === '"') {
-                        currentValue += '"'; 
-                        i++;                 
+                        currentValue += '"'; i++;                 
                     } else {
                         inQuotes = !inQuotes; 
                     }
                     continue; 
                 }
                 if (inQuotes) {
-                    currentValue += char;
-                    continue;
+                    currentValue += char; continue;
                 }
                 switch (char) {
                     case ',':
-                        currentRow.push(currentValue);
-                        currentValue = "";
-                        break;
+                        currentRow.push(currentValue); currentValue = ""; break;
                     case '\r':
                         if (text[i + 1] === '\n') i++; 
                     case '\n':
-                        currentRow.push(currentValue);
-                        rows.push(currentRow);
-                        currentRow = [];
-                        currentValue = "";
-                        break;
+                        currentRow.push(currentValue); rows.push(currentRow);
+                        currentRow = []; currentValue = ""; break;
                     default:
                         currentValue += char;
                 }
             }
             if (currentValue || currentRow.length > 0) {
-                currentRow.push(currentValue);
-                rows.push(currentRow);
+                currentRow.push(currentValue); rows.push(currentRow);
             }
             return rows.filter(row => row.some(cell => cell.trim() !== ''));
         }
@@ -77,9 +148,8 @@
                 const thead = document.createElement("thead");
                 const headerRow = document.createElement("tr");
                 headerRow.append(...headers.map(text => {
-                    // Pico CSS styling applies automatically to standard th tags
                     const th = document.createElement("th");
-                    th.setAttribute('scope', 'col'); // Good accessibility practice
+                    th.setAttribute('scope', 'col');
                     th.textContent = text.trim();
                     return th;
                 }));
@@ -109,22 +179,14 @@
     </script>
 </head>
 <body>
-    <!-- Pico CSS uses class="container" to center content and add responsive padding -->
-    <main class="container">
-        <header>
-            <h1>Roster</h1>
-        </header>
-        
-        <!-- 
-            Pico recommends wrapping tables in a .overflow-auto div 
-            so they scroll horizontally on mobile devices instead of breaking the layout.
-        -->
-        <div class="overflow-auto">
-            <!-- 100% pure semantic HTML. No CSS classes required! -->
-            <table data-csv-src="exports/roster.csv">
-                <caption>Loading table data...</caption>
-            </table>
-        </div>
+    <header>
+        <h1>Team Roster</h1>
+    </header>
+    
+    <!-- We use a wrapper strictly for managing mobile horizontal scrolling overflow -->
+    <main class="table-container">
+        <!-- 100% semantic, clean HTML -->
+        <table data-csv-src="exports/roster.csv"></table>
     </main>
 </body>
 </html>
