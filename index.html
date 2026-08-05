@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Roster</title>
+    
+    <!-- 1. Import Beer CSS from CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/beercss@3/dist/cdn/beer.min.css" rel="stylesheet">
+    
+    <style>
+        /* Optional page layout tuning */
+        main {
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+    </style>
+
+    <script type="module">
+        // 1. PARSING: Robust state-machine CSV parser
+        function parseCSV(text) {
+            const rows = [];
+            let currentRow = [];
+            let currentValue = "";
+            let inQuotes = false;
+
+            for (let i = 0; i < text.length; i++) {
+                const char = text[i];
+                if (char === '"') {
+                    if (inQuotes && text[i + 1] === '"') {
+                        currentValue += '"'; 
+                        i++;                 
+                    } else {
+                        inQuotes = !inQuotes; 
+                    }
+                    continue; 
+                }
+                if (inQuotes) {
+                    currentValue += char;
+                    continue;
+                }
+                switch (char) {
+                    case ',':
+                        currentRow.push(currentValue);
+                        currentValue = "";
+                        break;
+                    case '\r':
+                        if (text[i + 1] === '\n') i++; 
+                    case '\n':
+                        currentRow.push(currentValue);
+                        rows.push(currentRow);
+                        currentRow = [];
+                        currentValue = "";
+                        break;
+                    default:
+                        currentValue += char;
+                }
+            }
+            if (currentValue || currentRow.length > 0) {
+                currentRow.push(currentValue);
+                rows.push(currentRow);
+            }
+            return rows.filter(row => row.some(cell => cell.trim() !== ''));
+        }
+
+        // 2. RENDERING: Populate the semantic table dynamically
+        async function populateTable(table) {
+            const src = table.dataset.csvSrc;
+            if (!src) return;
+
+            try {
+                const response = await fetch(src);
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                
+                const text = await response.text();
+                const data = parseCSV(text);
+                
+                if (data.length === 0) {
+                    table.innerHTML = "<caption>CSV is empty.</caption>";
+                    return;
+                }
+
+                const [headers, ...rows] = data;
+                
+                const thead = document.createElement("thead");
+                const headerRow = document.createElement("tr");
+                headerRow.append(...headers.map(text => {
+                    const th = document.createElement("th");
+                    th.textContent = text.trim();
+                    return th;
+                }));
+                thead.appendChild(headerRow);
+
+                const tbody = document.createElement("tbody");
+                for (const rowData of rows) {
+                    const tr = document.createElement("tr");
+                    tr.append(...rowData.map(text => {
+                        const td = document.createElement("td");
+                        td.textContent = text.trim();
+                        return td;
+                    }));
+                    tbody.appendChild(tr);
+                }
+
+                table.replaceChildren(thead, tbody);
+
+            } catch (error) {
+                console.error('Error loading CSV:', error);
+                table.innerHTML = `<caption>Error loading data.</caption>`;
+            }
+        }
+
+        // 3. ORCHESTRATION
+        document.querySelectorAll('table[data-csv-src]').forEach(populateTable);
+    </script>
+</head>
+<body>
+    <header class="center-align">
+        <h1>Roster</h1>
+    </header>
+    <main>
+        <!-- 
+          Standard semantic table styled automatically by Beer CSS.
+          'border' and 'stripes' are native Beer CSS helper classes for tables.
+        -->
+        <table class="border stripes" data-csv-src="exports/roster.csv">
+            <caption>Loading table data...</caption>
+        </table>
+    </main>
+</body>
+</html>
