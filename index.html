@@ -5,18 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Roster</title>
     
-    <!-- 1. Import Beer CSS from CDN -->
-    <link href="https://cdn.jsdelivr.net/npm/beercss@3/dist/cdn/beer.min.css" rel="stylesheet">
-    
-    <style>
-        /* Optional page layout tuning */
-        main {
-            padding: 2rem;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-    </style>
+    <!-- 1. Import Pico CSS from CDN -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
 
     <script type="module">
         // 1. PARSING: Robust state-machine CSV parser
@@ -87,7 +77,9 @@
                 const thead = document.createElement("thead");
                 const headerRow = document.createElement("tr");
                 headerRow.append(...headers.map(text => {
+                    // Pico CSS styling applies automatically to standard th tags
                     const th = document.createElement("th");
+                    th.setAttribute('scope', 'col'); // Good accessibility practice
                     th.textContent = text.trim();
                     return th;
                 }));
@@ -117,17 +109,22 @@
     </script>
 </head>
 <body>
-    <header class="center-align">
-        <h1>Roster</h1>
-    </header>
-    <main>
+    <!-- Pico CSS uses class="container" to center content and add responsive padding -->
+    <main class="container">
+        <header>
+            <h1>Roster</h1>
+        </header>
+        
         <!-- 
-          Standard semantic table styled automatically by Beer CSS.
-          'border' and 'stripes' are native Beer CSS helper classes for tables.
+            Pico recommends wrapping tables in a .overflow-auto div 
+            so they scroll horizontally on mobile devices instead of breaking the layout.
         -->
-        <table class="border stripes" data-csv-src="exports/roster.csv">
-            <caption>Loading table data...</caption>
-        </table>
+        <div class="overflow-auto">
+            <!-- 100% pure semantic HTML. No CSS classes required! -->
+            <table data-csv-src="exports/roster.csv">
+                <caption>Loading table data...</caption>
+            </table>
+        </div>
     </main>
 </body>
 </html>
