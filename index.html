@@ -1,13 +1,14 @@
 <!DOCTYPE html>
 <html lang="en" data-theme="light">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Roster</title>
-    
+
     <!-- 1. Import Open Props and its excellent Normalize script -->
-    <link rel="stylesheet" href="https://unpkg.com/open-props"/>
-    <link rel="stylesheet" href="https://unpkg.com/open-props/normalize.min.css"/>
+    <link rel="stylesheet" href="https://unpkg.com/open-props" />
+    <link rel="stylesheet" href="https://unpkg.com/open-props/normalize.min.css" />
 
     <style>
         /* 
@@ -21,7 +22,8 @@
             flex-direction: column;
             align-items: center;
             padding: var(--size-5) var(--size-3);
-            background-color: var(--surface-2); /* Soft background */
+            background-color: var(--surface-2);
+            /* Soft background */
         }
 
         header {
@@ -39,55 +41,76 @@
 
         .table-container {
             width: 100%;
-            max-width: var(--size-content-3); /* Perfect reading width */
+            max-width: var(--size-content-3);
+            /* Perfect reading width */
             background-color: var(--surface-1);
             border-radius: var(--radius-3);
-            box-shadow: var(--shadow-4); /* Gorgeous, perfectly calculated shadow */
+            box-shadow: var(--shadow-4);
+            /* Gorgeous, perfectly calculated shadow */
             border: 1px solid var(--surface-3);
-            overflow-x: auto; /* Safe horizontal scrolling for mobile */
+            overflow-x: auto;
+            /* Safe horizontal scrolling for mobile */
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
             text-align: left;
-        }
 
-        th, td {
-            /* Using standard size tokens for consistent padding */
-            padding: var(--size-3) var(--size-4);
-            border-bottom: 1px solid var(--surface-3);
-        }
+            /* Elegant loading state without needing HTML changes */
+            &:empty::after {
+                content: "Loading roster data...";
+                display: block;
+                padding: var(--size-6);
+                text-align: center;
+                color: var(--text-3);
+                font-style: italic;
+                animation: var(--animation-pulse);
+                /* Built-in Open Props animation */
+            }
 
-        th {
-            background-color: var(--surface-1);
-            font-weight: var(--font-weight-6);
-            color: var(--text-2);
-            position: sticky; /* Sticky headers out of the box */
-            top: 0;
-            /* Subtle bottom border for headers */
-            box-shadow: 0 1px 0 var(--surface-4); 
-        }
+            th,
+            td {
+                /* Using standard size tokens for consistent padding */
+                padding: var(--size-3) var(--size-4);
+                border-bottom: 1px solid var(--surface-3);
+            }
 
-        /* Hover effect on rows using standard CSS pseudo-selectors */
-        tbody tr:hover td {
-            background-color: var(--surface-2);
-            transition: background-color 0.2s ease;
-        }
+            th {
+                background-color: var(--surface-1);
+                font-weight: var(--font-weight-6);
+                color: var(--text-2);
+                position: sticky;
+                /* Sticky headers out of the box */
+                top: 0;
+                /* Subtle bottom border for headers */
+                box-shadow: 0 1px 0 var(--surface-4);
+            }
 
-        /* Elegant loading state without needing HTML changes */
-        table:empty::after {
-            content: "Loading roster data...";
-            display: block;
-            padding: var(--size-6);
-            text-align: center;
-            color: var(--text-3);
-            font-style: italic;
-            animation: var(--animation-pulse); /* Built-in Open Props animation */
+            /* Hover effect on rows using standard CSS pseudo-selectors */
+            tbody tr:hover td {
+                background-color: var(--surface-2);
+                transition: background-color 0.2s ease;
+            }
+
+
         }
     </style>
 
     <script type="module">
+        // const hiddenColumns = []
+        const hiddenColumns = ["id","role","level","hp"];
+
+        const headerAliases = {
+            "id": "ID",
+            "name": "Name",
+            "role": "Role",
+            "level": "Level",
+            "hp": "HP",
+            "status": "Status",
+            "guild_name": "Guild",
+        };
+
         // 1. PARSING: Robust state-machine CSV parser
         function parseCSV(text) {
             const rows = [];
@@ -99,11 +122,11 @@
                 const char = text[i];
                 if (char === '"') {
                     if (inQuotes && text[i + 1] === '"') {
-                        currentValue += '"'; i++;                 
+                        currentValue += '"'; i++;
                     } else {
-                        inQuotes = !inQuotes; 
+                        inQuotes = !inQuotes;
                     }
-                    continue; 
+                    continue;
                 }
                 if (inQuotes) {
                     currentValue += char; continue;
@@ -112,7 +135,7 @@
                     case ',':
                         currentRow.push(currentValue); currentValue = ""; break;
                     case '\r':
-                        if (text[i + 1] === '\n') i++; 
+                        if (text[i + 1] === '\n') i++;
                     case '\n':
                         currentRow.push(currentValue); rows.push(currentRow);
                         currentRow = []; currentValue = ""; break;
@@ -134,39 +157,59 @@
             try {
                 const response = await fetch(src);
                 if (!response.ok) throw new Error(`HTTP ${response.status}`);
-                
+
                 const text = await response.text();
                 const data = parseCSV(text);
-                
+
                 if (data.length === 0) {
                     table.innerHTML = "<caption>CSV is empty.</caption>";
                     return;
                 }
 
                 const [headers, ...rows] = data;
-                
+
+                const hiddenIndices = new Set();
+                headers.forEach((headerText, index) => {
+                    if (hiddenColumns.includes(headerText.trim())) {
+                        hiddenIndices.add(index);
+                    }
+                });
+
                 const thead = document.createElement("thead");
                 const headerRow = document.createElement("tr");
-                headerRow.append(...headers.map(text => {
+                const caption = table.querySelector("caption");
+
+                // 3. Generate headers, returning `null` if the index is in our hidden Set
+                const thElements = headers.map((text, index) => {
+                    if (hiddenIndices.has(index)) return null; // Skip this column
+
                     const th = document.createElement("th");
                     th.setAttribute('scope', 'col');
-                    th.textContent = text.trim();
+                    let originalText = text.trim();
+                    th.textContent = headerAliases[originalText] || originalText;
                     return th;
-                }));
+                }).filter(Boolean); // .filter(Boolean) removes the `null` values from the array
+                headerRow.append(...thElements);
                 thead.appendChild(headerRow);
 
                 const tbody = document.createElement("tbody");
                 for (const rowData of rows) {
                     const tr = document.createElement("tr");
-                    tr.append(...rowData.map(text => {
+
+                    // 4. Generate cells, skipping the ones at the hidden indices
+                    const tdElements = rowData.map((text, index) => {
+                        if (hiddenIndices.has(index)) return null; // Skip this column
+
                         const td = document.createElement("td");
                         td.textContent = text.trim();
                         return td;
-                    }));
+                    }).filter(Boolean);
+
+                    tr.append(...tdElements);
                     tbody.appendChild(tr);
                 }
 
-                table.replaceChildren(thead, tbody);
+                table.replaceChildren(...[caption, thead, tbody].filter(Boolean));
 
             } catch (error) {
                 console.error('Error loading CSV:', error);
@@ -178,15 +221,18 @@
         document.querySelectorAll('table[data-csv-src]').forEach(populateTable);
     </script>
 </head>
+
 <body>
     <header>
-        <h1>Team Roster</h1>
+        <h1>Guild</h1>
     </header>
-    
+
     <!-- We use a wrapper strictly for managing mobile horizontal scrolling overflow -->
     <main class="table-container">
-        <!-- 100% semantic, clean HTML -->
-        <table data-csv-src="exports/roster.csv"></table>
+        <table data-csv-src="exports/roster.csv">
+            <!-- <caption>Roster</caption> -->
+        </table>
     </main>
 </body>
+
 </html>
