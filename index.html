@@ -41,7 +41,7 @@
             border-radius: var(--radius-3);
             border: 1px solid var(--surface-3);
             box-shadow: var(--shadow-4);
-            max-width: var(--size-content-3);
+            max-width: var(--size-content-4);
             overflow-x: auto;
             width: 100%;
         }
@@ -50,11 +50,12 @@
             background: transparent;
             border-collapse: collapse;
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            grid-template-columns: repeat(var(--col-count,5), minmax(150px, 1fr));
             max-height: 80vh;
             overflow-y: auto;
             text-align: left;
             width: 100%;
+           
 
 
             thead,
@@ -107,8 +108,8 @@
     </style>
 
     <script type="module">
-        // const hiddenColumns = []
-        const hiddenColumns = ["id", "role", "level", "hp"];
+        const hiddenColumns = []
+        // const hiddenColumns = ["id", "role", "level", "hp"];
 
         const headerAliases = {
             "id": "ID",
@@ -219,6 +220,8 @@
                     th.textContent = headerAliases[originalText] || originalText;
                     return th;
                 }).filter(Boolean); // .filter(Boolean) removes the `null` values from the array
+
+                table.style.setProperty('--col-count', thElements.length);
                 headerRow.append(...thElements);
                 thead.appendChild(headerRow);
 
